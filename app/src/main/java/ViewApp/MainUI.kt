@@ -10,12 +10,17 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -94,32 +100,57 @@ fun MenuScreen(navController: NavController,viewModel: AuthViewModel = viewModel
         val rewardPoints = viewModel.userPoints.value
         AccountDetail(walletAmount,rewardPoints)
         Spacer(modifier = Modifier.height(18.dp))
-        CardOption("Sân giá rẻ", image = R.drawable.avatar_datsan)
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.padding(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(cardDataList) { card ->
+                CardOption(name = card.title, image = card.image)
+            }
+        }
 
 
     }
 }
 
+data class CardData(val title: String, val image: Int)
+
+val cardDataList = listOf(
+    CardData("🔥 Sân giá rẻ", R.drawable.avatar_datsan),
+    CardData("📊 Lượt đặt nhiều nhất", R.drawable.avatar_datsan),
+    CardData("🎁 Đổi điểm sân mã hời", R.drawable.avatar_datsan),
+    CardData("🔗 Kết nối người lạ", R.drawable.avatar_datsan),
+    CardData("🎉 Live sự kiện giải đấu", R.drawable.avatar_datsan),
+    CardData("đang trống", R.drawable.avatar_datsan)
+)
+
 @Composable
 fun CardOption(name: String, image: Int){
     Card (
-        modifier = Modifier.padding(16.dp).background(Color.White)
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(1f),
+        elevation = CardDefaults.cardElevation(4.dp)
     ){
         Column {
             Text(
                 modifier = Modifier.clickable { },
                 text = name,
-                fontSize = 10.sp,
+                fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(2.dp))
             Image(
-                contentDescription = "Image dat san",
                 painter = painterResource(id = image),
-                modifier = Modifier.size(200.dp)
+                contentDescription = "Image of card",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp),
+                contentScale = ContentScale.Crop
             )
         }
-
     }
 }
 
