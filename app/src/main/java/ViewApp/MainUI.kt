@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -42,7 +41,7 @@ import com.example.projectapp.R
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun MenuScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
+fun MainScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     Column(modifier = Modifier
         .fillMaxWidth()
         .background(Color(0xFFF8DCDC))
@@ -72,28 +71,28 @@ fun MenuScreen(navController: NavController,viewModel: AuthViewModel = viewModel
                         contentDescription = "logo personal",
                         Modifier.size(70.dp)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
                     val username = viewModel.userName.value
-                    Text(
-                        text = "Hi, $username",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                }
-                Row {
-                    Text(
-                        text = "Đăng xuất",
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.clickable {
-                            logout(viewModel)
-                            navController.popBackStack("HomeScreen", inclusive = false)
-                        }
-                    )
+                    Column {
+                        Text(
+                            text = "Hi, $username",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Đăng xuất",
+                            color = Color.Blue,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                logout(viewModel)
+                                navController.popBackStack("LoginScreen", inclusive = false)
+                            }.padding(top = 4.dp)
+                        )
+                    }
 
                 }
             }
-
-
             Spacer(modifier = Modifier.height(12.dp))
         }
         val walletAmount = viewModel.userWallet.value
@@ -107,11 +106,10 @@ fun MenuScreen(navController: NavController,viewModel: AuthViewModel = viewModel
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(cardDataList) { card ->
-                CardOption(name = card.title, image = card.image)
+                CardOption(name = card.title, image = card.image, navController = navController)
             }
         }
-
-
+        BottomBar(navController)
     }
 }
 
@@ -119,15 +117,15 @@ data class CardData(val title: String, val image: Int)
 
 val cardDataList = listOf(
     CardData("🔥 Sân giá rẻ", R.drawable.avatar_datsan),
-    CardData("📊 Lượt đặt nhiều nhất", R.drawable.avatar_datsan),
-    CardData("🎁 Đổi điểm sân mã hời", R.drawable.avatar_datsan),
-    CardData("🔗 Kết nối người lạ", R.drawable.avatar_datsan),
-    CardData("🎉 Live sự kiện giải đấu", R.drawable.avatar_datsan),
-    CardData("đang trống", R.drawable.avatar_datsan)
+    CardData("📊 Lượt đặt nhiều nhất", R.drawable.avatar_danhgia),
+    CardData("🎁 Đổi điểm sân mã hời", R.drawable.avatar_bigsale),
+    CardData("🔗 Kết nối người lạ", R.drawable.avatar_connect),
+    CardData("🎉 Live sự kiện giải đấu", R.drawable.avatar_event),
+    CardData("phát triển thêm", R.drawable.avatar_datsan)
 )
 
 @Composable
-fun CardOption(name: String, image: Int){
+fun CardOption(name: String, image: Int, navController: NavController){
     Card (
         modifier = Modifier
             .fillMaxWidth()
@@ -136,7 +134,7 @@ fun CardOption(name: String, image: Int){
     ){
         Column {
             Text(
-                modifier = Modifier.clickable { },
+                modifier = Modifier.clickable { navController.navigate("OptionlScreen") },
                 text = name,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold
@@ -206,35 +204,45 @@ fun AccountDetail(amount: Int, points: Int) {
     }
 }
 
+@Composable
+fun BottomBar(navController: NavController) {
+    val items = listOf(
+        "Home" to "MainScreen",
+        "Giỏ" to "cart_screen",
+        "Sân" to "OptionlScreen",
+        "Thông báo" to "notification_screen",
+        "Tôi" to "AccountScreen"
+    )
+
+    Row(
+        modifier = Modifier.height(70.dp)
+            .fillMaxWidth()
+            .background(Color.White)
+            .padding(top = 15.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        items.forEach { (label, route) ->
+            Text(
+                text = label,
+                modifier = Modifier.clickable {
+                    navController.navigate(route) {
+                        popUpTo(navController.graph.startDestinationId) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }.padding(10.dp),
+                fontSize = 18.sp,
+
+            )
+        }
+    }
+}
+
 fun logout(viewModel: AuthViewModel){
     FirebaseAuth.getInstance().signOut()
     viewModel.authResult.value = ""
     viewModel.userEmail.value = ""
     viewModel.userPassword.value = ""
-}
-
-
-
-
-
-
-
-
-
-
-
-class FakeAuthViewModel : AuthViewModel() {
-    init {
-        userName.value = "Nguyen Van A"
-        updateWallet(100000)
-        updatePoints(250)
-    }
-}
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ShowMenuPreview() {
-    val navController = rememberNavController()
-    val fakeViewModel = remember { FakeAuthViewModel() }
-
-    MenuScreen(navController = navController, viewModel = fakeViewModel)
 }

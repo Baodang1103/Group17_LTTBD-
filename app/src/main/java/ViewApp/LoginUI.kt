@@ -28,7 +28,7 @@ import com.example.app.viewmodel.AuthViewModel
 import com.google.firebase.firestore.auth.User
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: AuthViewModel) {
+fun LoginScreen(navController: NavController, viewModel: AuthViewModel) {
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavController, viewModel: AuthViewModel) {
         LaunchedEffect(viewModel.authResult.value) {
             if (viewModel.authResult.value == "Đăng nhập thành công") {
                 Toast.makeText(context, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
-                navController.navigate("MenuScreen")
+                navController.navigate("MainScreen")
             } else if (viewModel.authResult.value.startsWith("Vui lòng nhập đầy đủ thông tin")) {
                 Toast.makeText(context, viewModel.authResult.value, Toast.LENGTH_SHORT).show()
             }

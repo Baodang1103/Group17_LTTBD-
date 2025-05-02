@@ -1,7 +1,10 @@
 package ViewModelApp
 
-import ViewApp.HomeScreen
-import ViewApp.MenuScreen
+import ViewApp.AccountScreen
+import ViewApp.AddScreen
+import ViewApp.LoginScreen
+import ViewApp.MainScreen
+import ViewApp.OptionlScreen
 import ViewApp.SignInScreen
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,15 +19,24 @@ fun NavigationApp() {
     val navController = rememberNavController()
     val viewModel: AuthViewModel = viewModel()
 
-    NavHost(navController = navController, startDestination = "HomeScreen") {
-        composable("HomeScreen") {
-            HomeScreen(navController, viewModel)
+    NavHost(navController = navController, startDestination = "LoginScreen") {
+        composable("LoginScreen") {
+            LoginScreen(navController, viewModel)
         }
         composable("SignInScreen") {
             SignInScreen(navController, viewModel)
         }
-        composable("MenuScreen") {
-            MenuScreen(navController, viewModel)
+        composable("MainScreen") {
+            MainScreen(navController, viewModel)
+        }
+        composable("OptionlScreen") {
+            OptionlScreen(navController, viewModel)
+        }
+        composable("AccountScreen") {
+            AccountScreen(navController, viewModel)
+        }
+        composable("AddScreen") {
+            AddScreen(navController)
         }
     }
 }

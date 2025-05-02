@@ -68,4 +68,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.12.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-database:20.3.0")
+    implementation ("androidx.compose.foundation:foundation:1.4.3")
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation ("com.google.firebase:firebase-firestore-ktx:24.4.5")
 }

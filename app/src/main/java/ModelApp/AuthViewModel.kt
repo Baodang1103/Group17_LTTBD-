@@ -1,10 +1,20 @@
 package com.example.app.viewmodel
 
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 
 open class AuthViewModel : ViewModel() {
     val auth = FirebaseAuth.getInstance()
@@ -25,7 +35,6 @@ open class AuthViewModel : ViewModel() {
         val email = userEmail.value
         val password = userPassword.value
         val username = userName.value
-
         if (email.isNotEmpty() && password.isNotEmpty()) {
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
@@ -38,6 +47,7 @@ open class AuthViewModel : ViewModel() {
                             val userMap = mapOf(
                                 "username" to username,
                                 "email" to email,
+                                "admin" to false,
                                 "wallet" to 0,
                                 "points" to 0
                             )
@@ -86,6 +96,8 @@ open class AuthViewModel : ViewModel() {
             }
     }
 
+
+
     fun updateWallet(amount: Int) {
         _userWallet.value = amount
     }
@@ -93,7 +105,62 @@ open class AuthViewModel : ViewModel() {
     fun updatePoints(points: Int) {
         _userPoints.value = points
     }
+
+
 }
 
+fun saveCourtToFirestore(
+    name: String,
+    location: String,
+    phone: String,
+    rating: Double,
+    imageUrl: String,
+    onSuccess: () -> Unit,
+    onError: (String) -> Unit
+) {
+    val court = hashMapOf(
+        "name" to name,
+        "location" to location,
+        "phone" to phone,
+        "rating" to rating,
+        "imageUrls" to listOf(imageUrl)
+    )
 
+    FirebaseFirestore.getInstance().collection("courts")
+        .add(court)
+        .addOnSuccessListener { onSuccess() }
+        .addOnFailureListener { e -> onError(e.message ?: "Lỗi không xác định") }
+}
 
+data class Court(
+    val name: String = "",
+    val location: String = "",
+    val phone: String = "",
+    val rating: Double = 0.0,
+    val imageUrls: List<String> = emptyList()
+)
+
+@Composable
+fun rememberCourts(): List<Court> {
+    var courtList by remember { mutableStateOf(listOf<Court>()) }
+
+    LaunchedEffect(true) {
+        FirebaseFirestore.getInstance()
+            .collection("courts")
+            .get()
+            .addOnSuccessListener { result ->
+                val courts = result.map { doc ->
+                    Court(
+                        name = doc.getString("name") ?: "",
+                        location = doc.getString("location") ?: "",
+                        phone = doc.getString("phone") ?: "",
+                        rating = doc.getDouble("rating") ?: 0.0,
+                        imageUrls = doc.get("imageUrls") as? List<String> ?: emptyList()
+                    )
+                }
+                courtList = courts
+            }
+    }
+
+    return courtList
+}

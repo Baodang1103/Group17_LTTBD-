@@ -3,11 +3,14 @@ package ViewApp
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,6 +33,7 @@ fun SignInScreen(navController: NavController, viewModel: AuthViewModel) {
     var email by rememberSaveable { mutableStateOf("") }
     var username by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
+    var admin by rememberSaveable { mutableStateOf(false) }
 
     val context = LocalContext.current
 
@@ -63,10 +67,14 @@ fun SignInScreen(navController: NavController, viewModel: AuthViewModel) {
         LaunchedEffect(viewModel.authResult.value) {
             if (viewModel.authResult.value == "Vui lòng kiểm tra Email") {
                 Toast.makeText(context,viewModel.authResult.value, Toast.LENGTH_SHORT).show()
-                navController.navigate("HomeScreen")
+                navController.navigate("LoginScreen")
             } else if (viewModel.authResult.value.startsWith("Vui lòng nhập đầy đủ thông tin")) {
                 Toast.makeText(context, viewModel.authResult.value, Toast.LENGTH_SHORT).show()
             }
         }
     }
 }
+
+
+
+
