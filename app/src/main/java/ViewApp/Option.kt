@@ -57,10 +57,10 @@ import com.google.firebase.firestore.firestore
 fun OptionlScreen(navController: NavController, viewModel: AuthViewModel = viewModel()){
     Column(modifier = Modifier
         .fillMaxWidth()
-        .background(Color(0xFFF8DCDC))){
+        .background(Color(0xFFF0E6CD))){
         Row(modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF9FBD4)),
+            .background(Color(0xFFF0E6CD)),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ){
@@ -122,7 +122,7 @@ fun OptionlScreen(navController: NavController, viewModel: AuthViewModel = viewM
             items(courts) { court ->
                 Card(
                     elevation = 4.dp,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().clickable { navController.navigate("PickupScreen") }
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         court.imageUrls.firstOrNull()?.let { imageUrl ->
@@ -153,7 +153,7 @@ fun SearchBar(value: String, onValueChange: (String) -> Unit){
     Row (
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF9FBD4))
+            .background(Color(0xFFF0E6CD))
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically

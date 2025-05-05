@@ -44,11 +44,11 @@ import com.google.firebase.auth.FirebaseAuth
 fun MainScreen(navController: NavController,viewModel: AuthViewModel = viewModel()){
     Column(modifier = Modifier
         .fillMaxWidth()
-        .background(Color(0xFFF8DCDC))
+        .background(Color(0xFFF0E6CD))
     ){
         Row (modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF9FBD4)),
+            .background(Color(0xFFF0E6CD)),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically){
             Row (verticalAlignment = Alignment.CenterVertically){
@@ -161,7 +161,7 @@ fun AccountDetail(amount: Int, points: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color(0xFFF9FBD4))
+            .background(Color(0xFFF0E6CD))
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -208,16 +208,15 @@ fun AccountDetail(amount: Int, points: Int) {
 fun BottomBar(navController: NavController) {
     val items = listOf(
         "Home" to "MainScreen",
-        "Giỏ" to "cart_screen",
+        "Giỏ" to "ShoppingScreen",
         "Sân" to "OptionlScreen",
-        "Thông báo" to "notification_screen",
         "Tôi" to "AccountScreen"
     )
 
     Row(
         modifier = Modifier.height(70.dp)
             .fillMaxWidth()
-            .background(Color.White)
+            .background(Color(0xFFF0E6CD))
             .padding(top = 15.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {

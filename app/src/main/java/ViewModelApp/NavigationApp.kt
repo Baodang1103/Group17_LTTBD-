@@ -5,6 +5,9 @@ import ViewApp.AddScreen
 import ViewApp.LoginScreen
 import ViewApp.MainScreen
 import ViewApp.OptionlScreen
+import ViewApp.PaymentScreen
+import ViewApp.PickupScreen
+import ViewApp.ShoppingScreen
 import ViewApp.SignInScreen
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +40,15 @@ fun NavigationApp() {
         }
         composable("AddScreen") {
             AddScreen(navController)
+        }
+        composable("PickupScreen") {
+            PickupScreen(navController)
+        }
+/*        composable("PaymentScreen") {
+            PaymentScreen(navController, subCourtName = )
+        }*/
+        composable("ShoppingScreen") {
+            ShoppingScreen(navController,viewModel)
         }
     }
 }
